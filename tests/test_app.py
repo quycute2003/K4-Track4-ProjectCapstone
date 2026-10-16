@@ -77,7 +77,9 @@ class AppTests(unittest.TestCase):
     def test_camera_read_failure_is_not_reported_as_successful_eof(self):
         with tempfile.TemporaryDirectory() as temporary:
             args, cv2, capture, detector = self.setup_run(temporary, video=False)
-            with patch.dict(sys.modules, {"cv2": cv2}), patch.object(app, "EyeDetector", return_value=detector), redirect_stdout(io.StringIO()), self.assertRaises(RuntimeError):
+            from itertools import count
+            counter = count(0, 0.04)
+            with patch.dict(sys.modules, {"cv2": cv2}), patch.object(app, "EyeDetector", return_value=detector), patch("app.time.monotonic", side_effect=counter), redirect_stdout(io.StringIO()), self.assertRaises(RuntimeError):
                 app.run(args)
             capture.release.assert_called_once()
 

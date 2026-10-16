@@ -14,6 +14,13 @@ from pathlib import Path
 import sys
 import time
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 from src.contracts import DriverState, FrameResult
 from src.alarm import AlarmSound
 from src.eye_detector import EyeDetector
